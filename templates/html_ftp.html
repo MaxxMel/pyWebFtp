@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FTP Login</title>
+</head>
+<body>
+    <h1>FTP Login</h1>
+    <form action="/login" method="post">
+        <label for="ftp_host">FTP Host:</label><br>
+        <input type="text" id="ftp_host" name="ftp_host" required><br><br>
+
+        <label for="ftp_login">FTP Login:</label><br>
+        <input type="text" id="ftp_login" name="ftp_login" required><br><br>
+
+        <label for="ftp_password">FTP Password:</label><br>
+        <input type="password" id="ftp_password" name="ftp_password" required><br><br>
+
+        <button type="submit">Login</button>
+    </form>
+</body>
+</html>

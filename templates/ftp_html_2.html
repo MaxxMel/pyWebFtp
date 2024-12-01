@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FTP Command Console</title>
+</head>
+<body>
+    <h1>FTP Command Console</h1>
+    <div>
+        <p>Подключено к серверу: {{ session_data['ftp_host'] }}</p>
+        <p>Логин: {{ session_data['ftp_login'] }}</p>
+    </div>
+    <textarea id="output" rows="20" cols="80" readonly>Подключение к FTP-серверу...</textarea><br>
+    <input type="text" id="command" placeholder="Введите команду">
+    <button onclick="sendCommand()">Отправить</button>
+
+    <script>
+        const ws = new WebSocket("ws://127.0.0.1:8001/ws");
+
+        ws.onopen = function () {
+            const output = document.getElementById("output");
+            output.value += "WebSocket подключен. Введите команду.\n";
+        };
+
+        ws.onmessage = function (event) {
+            const output = document.getElementById("output");
+            output.value += event.data + "\n";
+            output.scrollTop = output.scrollHeight;  // Прокрутка вниз
+        };
+
+        ws.onerror = function () {
+            const output = document.getElementById("output");
+            output.value += "Ошибка WebSocket. Проверьте соединение.\n";
+        };
+
+        ws.onclose = function () {
+            const output = document.getElementById("output");
+            output.value += "WebSocket соединение закрыто.\n";
+        };
+
+        function sendCommand() {
+            const commandInput = document.getElementById("command");
+            const command = commandInput.value.trim();
+            if (command) {
+                ws.send(command);
+                commandInput.value = "";
+            }
+        }
+    </script>
+</body>
+</html>
