@@ -42,11 +42,9 @@ async def login(
 @app.get("/work", response_class=HTMLResponse)
 async def serve_work_page():
     if not session_data:
-        # Если нет данных сессии, возвращаем на страницу авторизации
         return RedirectResponse(url="/", status_code=303)
     return templates.TemplateResponse("ftp_html_2.html", {"request": {}, "session_data": session_data})
 
-# WebSocket для обработки команд FTP
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
@@ -55,7 +53,6 @@ async def websocket_endpoint(websocket: WebSocket):
     ftp_password = session_data.get("ftp_password")
 
     try:
-        # Подключаемся к FTP-серверу
         ftp = FTP(ftp_host)
         ftp.login(user=ftp_login, passwd=ftp_password)
         await websocket.send_text(f"Подключение к {ftp_host} успешно. Введите FTP-команду.")
@@ -66,7 +63,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
     while True:
         try:
-            command = await websocket.receive_text()  # Получаем команду от клиента
+            command = await websocket.receive_text()
             """if command.lower() == "ls":
                 # Список файлов и директорий
                 file_list = []
@@ -74,17 +71,17 @@ async def websocket_endpoint(websocket: WebSocket):
                 response = "\n".join(file_list)
                 await websocket.send_text(response)
             """
-            # Измененный блок команды ls
+    
             if command.lower() == "ls":
-                current_dir = ftp.pwd()  # Получаем текущую директорию
+                current_dir = ftp.pwd() 
                 items = ftp.nlst()
                 response = f"Содержимое {current_dir}:\n"
 
                 for item in items:
                     try:
-                        ftp.cwd(item)  # Проверяем, является ли объект директорией
+                        ftp.cwd(item)  
                         response += f"{item}/ (директория)\n"
-                        ftp.cwd(current_dir)  # Возвращаемся обратно
+                        ftp.cwd(current_dir) 
                     except ftplib.error_perm:
                         response += f"{item} (файл)\n"
                 await websocket.send_text(response)
