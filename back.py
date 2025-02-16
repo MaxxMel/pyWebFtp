@@ -6,10 +6,10 @@ from pathlib import Path
 from ftplib import FTP
 import ftplib
 
-# Создаем экземпляр приложения
+
 app = FastAPI()
 
-# Указываем путь к статическим файлам и шаблонам
+
 BASE_DIR = Path(__file__).resolve().parent
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
@@ -22,7 +22,6 @@ session_data = {}
 async def serve_login_page():
     return templates.TemplateResponse("html_ftp.html", {"request": {}})
 
-# Обработка формы авторизации
 @app.post("/login", response_class=RedirectResponse)
 async def login(
     ftp_host: str = Form(...),
@@ -35,10 +34,10 @@ async def login(
         "ftp_login": ftp_login,
         "ftp_password": ftp_password,
     }
-    # Перенаправление на страницу с консолью
+    
     return RedirectResponse(url="/work", status_code=303)
 
-# Страница с вводом команд (ftp_html_2.html)
+
 @app.get("/work", response_class=HTMLResponse)
 async def serve_work_page():
     if not session_data:
