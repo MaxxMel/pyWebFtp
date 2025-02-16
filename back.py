@@ -120,8 +120,8 @@ async def websocket_endpoint(websocket: WebSocket):
     await websocket.close()
 
 """
-- ftp-host: students.yss.su
+- ftp-host: ***************
 - login: ftpiu8
-- passwd: 3Ru7yOTA
+- passwd: ********
 
 """
